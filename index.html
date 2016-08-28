@@ -1,38 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
   <meta charset="utf-8" />
-
   <title>Simon Heinen</title>
-
   <style type="text/css">
-    body:before {
-      content: attr(message);
-    }
+    body:before { content: attr(message); }
   </style>
-
 </head>
 
 <body>
 
-  <script>
-    (function(){
-      var redirect = sessionStorage.redirect;
-      delete sessionStorage.redirect;
-      if (redirect && redirect != location.href) {
-        history.replaceState(null, null, redirect);
-        // REMOVE THIS - just showing the redirect route in the UI
-        document.body.setAttribute('message', 'This page was redirected by 404.html, from the route: ' + redirect);
-      }
-      else {
-        // REMOVE THIS - just showing the redirect route in the UI
-        document.body.setAttribute('message', 'This page was loaded directly from the index.html file');
-      }
-    })();
-  </script>
+	<div id="containerMain">
+		containerMain not initialized <!-- will be replaced by react -->
+	</div>
 
+	<!-- REACT https://facebook.github.io/react/downloads.html -->
+	<script src="https://npmcdn.com/react@15.3.1/dist/react.js"></script>
+	<script src="https://npmcdn.com/react-dom@15.3.1/dist/react-dom.js"></script>
+	<script>
+		(function(){
+			var props = {mUrl:sessionStorage.redirect};
+			delete sessionStorage.redirect;
+			if (props.mUrl && props.mUrl != location.href) {
+				history.replaceState(null, null, props.mUrl);
+			}
+			else { props.mUrl="index.html"; }
+			var C_MainUi = React.createClass({
+				displayName: 'Main UI',
+				render: function() {
+					var ui = React.createElement("div", null, "URL=", this.props.mUrl);
+					return ui;
+				}
+			});
+			var mainUi = React.createElement(C_MainUi, props);
+			ReactDOM.render(mainUi, document.getElementById('containerMain'));
+		})();
+	</script>
+ 
 </body>
 
 
